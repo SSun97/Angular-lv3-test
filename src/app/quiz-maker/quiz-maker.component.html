@@ -1,11 +1,25 @@
 <div class="row">
-  <div class="col-sm-11">
-    <select #category id="categorySelect">
-      <option>Select category</option>
-      <option [value]="category.id" *ngFor="let category of categories$ | async">
-        {{category.name}}
+  <div class="col-sm-11 row">
+    <!-- Dropdown for Group Selection -->
+    <select #group id="groupSelect" #category (change)="onGroupSelected(group.value)">
+      <option value="">Select group</option>
+      <option *ngFor="let groupKey of (categories$ | async) | keyvalue" [value]="groupKey.value[0].id">
+        {{groupKey.key}}
       </option>
     </select>
+
+    <!-- Conditionally show second dropdown based on group selection -->
+    <div *ngIf="subCategories$ | async as subCategories">
+      <select *ngIf="subCategories.length > 1" #subCategory id="categorySelect" (change)="onCategorySelected(+subCategory.id)">
+        <option value="">Select category</option>
+        <option *ngFor="let category of subCategories" [value]="category.id">
+          {{category.name}}
+        </option>
+
+      </select>
+      
+    </div>
+
     <select #difficulty id="difficultySelect">
       <option>Select difficulty</option>
       <option>Easy</option>
@@ -14,8 +28,8 @@
     </select>
     <button class="primary" id="createBtn" (click)="createQuiz(category.value, difficulty.value)">Create</button>
   </div>
-
 </div>
 <div class="row">
    <app-quiz [questions]="questions$ | async" ></app-quiz>
 </div>
+

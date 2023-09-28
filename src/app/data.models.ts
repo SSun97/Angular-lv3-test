@@ -3,6 +3,10 @@ export interface Category {
   name: string;
 }
 
+export interface groupCategoriesByType{
+  [key: string]: Category[];
+}
+
 export interface ApiQuestion {
   category: string;
   type: string;
