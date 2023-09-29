@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Category, Difficulty, Question } from '../data.models';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { QuizService } from '../quiz.service';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-quiz-maker',
@@ -17,6 +17,8 @@ export class QuizMakerComponent {
   private subCategoriesSubject: BehaviorSubject<Category[]> = new BehaviorSubject<Category[]>([]);
   selectedCategoryName$ = new BehaviorSubject<string | null>(null);
   subCategories$: Observable<Category[]> | undefined;
+  @ViewChild('category') categoryDropdown: ElementRef | undefined;
+  subCategoryValue: number | undefined;
 
   constructor(protected quizService: QuizService) {
     this.categories$ = quizService.getAllCategories().pipe(
@@ -52,8 +54,15 @@ export class QuizMakerComponent {
       this.subCategoriesSubject.next([]);
     }
 }
+onSubCategoryChange(selectedSubCategoryId: number): void {
+  console.log('Selected Subcategory ID:', selectedSubCategoryId);
+  this.subCategoryValue = selectedSubCategoryId;
+}
 
-  createQuiz(catId: number, difficulty: string): void {
-    this.questions$ = this.quizService.createQuiz(catId.toString(), difficulty as Difficulty);
-  }
+createQuiz(value: string, subcategoriesValue: number|undefined,difficulty: string): void {
+  const [selectedCategoryId] = value.split(',');
+  const catId = Number(selectedCategoryId) || subcategoriesValue || 0;
+
+  this.questions$ = this.quizService.createQuiz(catId.toString(), difficulty as Difficulty);
+}
 }
