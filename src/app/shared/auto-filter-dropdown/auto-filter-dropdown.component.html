@@ -1,6 +1,6 @@
 <div 
   class="dropdown-container"
-  (mouseover)="isHovering = true"
+  (mouseover)="isHovering = true" (focus)="isHovering = true"
 >
   <input 
     type="text" 
@@ -10,7 +10,7 @@
   />
 
   <ul *ngIf="isHovering && filteredItems.length > 0" class="dropdown-list">
-    <li *ngFor="let item of filteredItems" (click)="selectCategory(item)">
+    <li *ngFor="let item of filteredItems" (click)="selectCategory(item)" (keyup.enter)="selectCategory(item)" tabindex="0">
       <span [innerHTML]="highlightText(item.name)"></span>
     </li>
   </ul>

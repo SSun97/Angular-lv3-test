@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Category, Difficulty, Question } from '../data.models';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { QuizService } from '../quiz.service';
@@ -43,14 +43,15 @@ export class QuizMakerComponent {
   handleSelectedValueChange(value: string): void {
     const [selectedCategoryId, selectedCategoryName] = value.split(',').map(v => v.trim());
     this.selectedValue = value;
+    selectedCategoryId
     this.selectedCategoryName$.next(selectedCategoryName);
 }
 handleSelectedSubValueChange(value: string): void {
-  const [selectedCategoryId, selectedCategoryName] = value.split(',').map(v => v.trim());
   this.selectedValue = value;
 }
   onCategoryChange(value: string): void {
     const [selectedCategoryId, selectedCategoryName] = value.split(',').map(v => v.trim());
+    selectedCategoryId
     this.selectedCategoryName$.next(selectedCategoryName);
     const selectedCategory = this.categories.find(category => category.name === selectedCategoryName);
     

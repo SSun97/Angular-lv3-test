@@ -22,11 +22,9 @@ export class AutoFilterDropdownComponent implements OnInit {
   @Output() itemSelected: EventEmitter<Category> = new EventEmitter();
   @Output() valueChange = new EventEmitter<string>();
 
-  searchText: string = '';
+  searchText = '';
   filteredItems: Category[] = [];
-  isHovering: boolean = false;
-
-  constructor() {}
+  isHovering = false;
 
   ngOnInit(): void {
     this.filteredItems = [...this.itemList];
