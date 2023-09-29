@@ -14,11 +14,50 @@ export class QuizService {
   constructor(private http: HttpClient) {
   }
 
+  // getAllCategories(): Observable<Category[]> {
+  //   return this.http.get<{ trivia_categories: Category[] }>(this.API_URL + "api_category.php").pipe(
+  //     map(res => res.trivia_categories)
+  //   );
+  // }
   getAllCategories(): Observable<Category[]> {
     return this.http.get<{ trivia_categories: Category[] }>(this.API_URL + "api_category.php").pipe(
-      map(res => res.trivia_categories)
+      map(res => {
+        const categories = res.trivia_categories;
+
+        const entertainment = {
+          name: "Entertainment",
+          subcategories: categories.filter(category => category.name.startsWith('Entertainment:'))
+            .map(category => {
+              return { id: category.id, name: category.name.split(': ')[1] };  // Split to get the subcategory name
+            })
+            .sort((a, b) => a.name.localeCompare(b.name))  // Sort subcategories by name
+        };
+
+        const science = {
+          name: "Science",
+          subcategories: categories.filter(category => category.name.startsWith('Science:'))
+            .map(category => {
+              return { id: category.id, name: category.name.split(': ')[1] };  // Split to get the subcategory name
+            })
+            .sort((a, b) => a.name.localeCompare(b.name))  // Sort subcategories by name
+        };
+
+        const others = categories.filter(category => !category.name.startsWith('Entertainment:') && !category.name.startsWith('Science:'))
+          .map(category => ({
+            name: category.name,
+            id: category.id
+          }));
+
+        // Combine the results
+        const combined = [{...entertainment}, {...science}, ...others];
+
+        // Sort the main categories based on the name
+        console.log(combined.sort((a, b) => a.name.localeCompare(b.name)));
+        return combined.sort((a, b) => a.name.localeCompare(b.name));
+      })
     );
-  }
+}
+
 
   createQuiz(categoryId: string, difficulty: Difficulty): Observable<Question[]> {
     return this.http.get<{ results: ApiQuestion[] }>(
