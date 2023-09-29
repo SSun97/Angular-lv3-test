@@ -17,12 +17,13 @@ export class QuizMakerComponent {
   private subCategoriesSubject: BehaviorSubject<Category[]> = new BehaviorSubject<Category[]>([]);
   selectedCategoryName$ = new BehaviorSubject<string | null>(null);
   subCategories$: Observable<Category[]> | undefined;
-  @ViewChild('category') categoryDropdown: ElementRef | undefined;
+  // @ViewChild('category') categoryDropdown: ElementRef | undefined;
   subCategoryValue: number | undefined;
+  selectedValue: string | null = null;
 
   constructor(protected quizService: QuizService) {
     this.categories$ = quizService.getAllCategories().pipe(
-      tap(categories => this.categories = categories)
+      tap(categories => {this.categories = categories; console.log('Categories:', categories);})
     );
     this.subCategories$ = combineLatest([
       this.categories$,
@@ -39,14 +40,19 @@ export class QuizMakerComponent {
   );
   
   }
-
+  handleSelectedValueChange(value: string): void {
+    const [selectedCategoryId, selectedCategoryName] = value.split(',').map(v => v.trim());
+    this.selectedValue = value;
+    this.selectedCategoryName$.next(selectedCategoryName);
+}
+handleSelectedSubValueChange(value: string): void {
+  const [selectedCategoryId, selectedCategoryName] = value.split(',').map(v => v.trim());
+  this.selectedValue = value;
+}
   onCategoryChange(value: string): void {
     const [selectedCategoryId, selectedCategoryName] = value.split(',').map(v => v.trim());
-    console.log('Selected Category ID:', selectedCategoryId);
-    console.log('Selected Category Name:', selectedCategoryName);
     this.selectedCategoryName$.next(selectedCategoryName);
     const selectedCategory = this.categories.find(category => category.name === selectedCategoryName);
-    console.log('Selected Category:', selectedCategory);
     
     if (selectedCategory && selectedCategory.subcategories) {
       this.subCategoriesSubject.next(selectedCategory.subcategories);
@@ -54,13 +60,12 @@ export class QuizMakerComponent {
       this.subCategoriesSubject.next([]);
     }
 }
-onSubCategoryChange(selectedSubCategoryId: number): void {
-  console.log('Selected Subcategory ID:', selectedSubCategoryId);
+onSubCategoryChange(selectedSubCategoryId: number | undefined): void {
   this.subCategoryValue = selectedSubCategoryId;
 }
 
-createQuiz(value: string, subcategoriesValue: number|undefined,difficulty: string): void {
-  const [selectedCategoryId] = value.split(',');
+createQuiz( value: string | null ,subcategoriesValue: number|undefined,difficulty: string): void {
+  const [selectedCategoryId] = value?.split(',') || [];
   const catId = Number(selectedCategoryId) || subcategoriesValue || 0;
 
   this.questions$ = this.quizService.createQuiz(catId.toString(), difficulty as Difficulty);

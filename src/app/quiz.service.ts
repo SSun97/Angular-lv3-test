@@ -52,7 +52,6 @@ export class QuizService {
         const combined = [{...entertainment}, {...science}, ...others];
 
         // Sort the main categories based on the name
-        console.log(combined.sort((a, b) => a.name.localeCompare(b.name)));
         return combined.sort((a, b) => a.name.localeCompare(b.name));
       })
     );

@@ -1,22 +1,20 @@
 <div class="row">
   <div class="col-sm-11" class="row">
     <div>
-    <select #category id="categorySelect" (change)="onCategoryChange(category.value)">
-      <option value="">Select category</option>
-      <option *ngFor="let category of categories$ | async" #selecedCategory [value]="category.id + ',' + category.name">
-        {{ category.name }}
-      </option>
-    </select>
+    <ng-container #category *ngIf="categories$ | async as categories">
+      <app-auto-filter-dropdown #categoryDropdown
+        [itemList]="categories"
+        (valueChange)="handleSelectedValueChange($event)"
+      ></app-auto-filter-dropdown>
+    </ng-container>
     </div>
 
     <div *ngIf="subCategories$ | async as subCategoriesList">
       <ng-container *ngIf="subCategoriesList.length > 0">
-        <select #subCategory id="subCategorySelect" (change)="onSubCategoryChange(+subCategory.value)">
-          <option [ngValue]="null">Select category</option>
-          <option [value]="sub.id" *ngFor="let sub of subCategoriesList">
-            {{sub.name}}
-          </option>
-        </select>
+        <app-auto-filter-dropdown 
+        [itemList]="subCategoriesList"
+        (valueChange)="handleSelectedSubValueChange($event)"
+      ></app-auto-filter-dropdown>
       </ng-container>
     </div>
     <ng-template #noSubCategory></ng-template>
@@ -29,7 +27,8 @@
     </select>
     </div>
     <div>
-    <button class="primary" id="createBtn" (click)="createQuiz(category.value, subCategoryValue, difficulty.value)">Create</button>
+      <button class="primary" id="createBtn" (click)="createQuiz(selectedValue, subCategoryValue, difficulty.value)">Create</button>
+
   </div>
   </div>
 </div>
@@ -38,6 +37,3 @@
    <app-quiz [questions]="questions$ | async"></app-quiz>
 </div>
 
-<!-- show autofulterdropdown component -->
-<div class="row">
-  <app-auto-filter-dropdown></app-auto-filter-dropdown>

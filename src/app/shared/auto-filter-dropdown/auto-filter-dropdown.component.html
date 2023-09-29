@@ -11,7 +11,7 @@
 
   <ul *ngIf="isHovering && filteredItems.length > 0" class="dropdown-list">
     <li *ngFor="let item of filteredItems" (click)="selectCategory(item)">
-      <span [innerHTML]="highlightText(item)"></span>
+      <span [innerHTML]="highlightText(item.name)"></span>
     </li>
   </ul>
 </div>
