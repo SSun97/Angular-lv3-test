@@ -1,0 +1,17 @@
+<div 
+  class="dropdown-container"
+  (mouseover)="isHovering = true"
+>
+  <input 
+    type="text" 
+    placeholder="Search..."
+    [(ngModel)]="searchText"
+    (input)="filterItems()"
+  />
+
+  <ul *ngIf="isHovering && filteredItems.length > 0" class="dropdown-list">
+    <li *ngFor="let item of filteredItems" (click)="selectCategory(item)">
+      <span [innerHTML]="highlightText(item)"></span>
+    </li>
+  </ul>
+</div>
