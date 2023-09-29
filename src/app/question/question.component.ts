@@ -30,11 +30,16 @@ export class QuestionComponent {
 
   @Output()
   qChange = new EventEmitter<string>();
-
+  @Output()
+  changeQuestion = new EventEmitter<Question>();
   currentSelection!: string;
 
   buttonClicked(answer: string): void {
     this.currentSelection = answer;
     this.qChange.emit(answer);
   }
+  onChangeBtnClick(question: Question): void{
+    this.changeQuestion.emit(question);
+  }
+
 }
