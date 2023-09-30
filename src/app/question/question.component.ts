@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Question} from '../data.models';
+import { ButtonStateService } from '../button-state.service';
 
 @Component({
   selector: 'app-question',
@@ -15,6 +16,13 @@ export class QuestionComponent {
   @Input()
   userAnswer?: string;
 
+  showChangeButton= true;
+  constructor(private buttonStateService: ButtonStateService) {
+    // Subscribe to the service to know if the button should be shown or hidden
+    this.buttonStateService.showChangeButton$.subscribe(state => {
+      this.showChangeButton = state;
+    });
+  }
   getButtonClass(answer: string): string {
     if (! this.userAnswer) {
         if (this.currentSelection == answer)

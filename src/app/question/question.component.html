@@ -5,5 +5,5 @@
           *ngFor="let answer of question.all_answers"
           [innerHTML]="answer">
   </button>
-  <button class='inverse' (click)='onChangeBtnClick(question)'>Change</button>
+  <button class='inverse' *ngIf="showChangeButton" (click)='onChangeBtnClick(question)'>Change</button>
 </div>

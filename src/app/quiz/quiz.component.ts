@@ -2,6 +2,7 @@ import {Component, inject, Input} from '@angular/core';
 import {Difficulty, Question} from '../data.models';
 import {QuizService} from '../quiz.service';
 import {Router} from '@angular/router';
+import { ButtonStateService } from '../button-state.service';
 
 @Component({
   selector: 'app-quiz',
@@ -17,6 +18,7 @@ export class QuizComponent {
   userAnswers: string[] = [];
   quizService = inject(QuizService);
   router = inject(Router);
+  buttonStateService = inject(ButtonStateService);
 
   replaceQuestion(questions: Question[], oldQuestion: Question): void {
     // Find the index of the question to be replaced
@@ -40,6 +42,7 @@ export class QuizComponent {
   }}
   updateQuestions(questions: Question[], oldQuestion: Question): void {
     this.replaceQuestion(questions, oldQuestion);
+    this.buttonStateService.hideChangeButton();
   }
   submit(): void {
     this.quizService.computeScore(this.questions ?? [], this.userAnswers);

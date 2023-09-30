@@ -38,6 +38,7 @@ export class QuizMakerComponent {
           return [];
       })
   );
+  localStorage.clear();
   
   }
   handleSelectedValueChange(value: string): void {
@@ -55,6 +56,7 @@ export class QuizMakerComponent {
       difficulty: this.difficulty?.nativeElement?.value ?? ''
     };
     localStorage.setItem('quizData', JSON.stringify(quizData));
+    localStorage.setItem('count', '1');
   }
 handleSelectedSubValueChange(value: string): void {
   this.selectedValue = value;

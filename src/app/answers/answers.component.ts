@@ -1,5 +1,6 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, inject} from '@angular/core';
 import {Results} from '../data.models';
+import { ButtonStateService } from '../button-state.service';
 
 @Component({
   selector: 'app-answers',
@@ -10,5 +11,8 @@ export class AnswersComponent {
 
   @Input()
   data!: Results;
-
+  btnStateService = inject(ButtonStateService);
+  refreshBtnState(): void {
+    this.btnStateService.refreshChangeButton();
+  }
 }
