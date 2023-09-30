@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Category, Difficulty, Question } from '../data.models';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { QuizService } from '../quiz.service';
@@ -17,7 +17,7 @@ export class QuizMakerComponent {
   private subCategoriesSubject: BehaviorSubject<Category[]> = new BehaviorSubject<Category[]>([]);
   selectedCategoryName$ = new BehaviorSubject<string | null>(null);
   subCategories$: Observable<Category[]> | undefined;
-  // @ViewChild('category') categoryDropdown: ElementRef | undefined;
+  @ViewChild('difficulty') difficulty: ElementRef<HTMLSelectElement> | undefined;
   subCategoryValue: number | undefined;
   selectedValue: string | null = null;
 
@@ -44,10 +44,21 @@ export class QuizMakerComponent {
     const [selectedCategoryId, selectedCategoryName] = value.split(',').map(v => v.trim());
     this.selectedValue = value;
     selectedCategoryId
+    this.saveToLocalStorage();
     this.selectedCategoryName$.next(selectedCategoryName);
-}
+  }
+
+  saveToLocalStorage(): void {
+    const quizData = {
+      selectedValue: this.selectedValue,
+      subCategoryValue: this.subCategoryValue ?? undefined,
+      difficulty: this.difficulty?.nativeElement?.value ?? ''
+    };
+    localStorage.setItem('quizData', JSON.stringify(quizData));
+  }
 handleSelectedSubValueChange(value: string): void {
   this.selectedValue = value;
+  this.saveToLocalStorage();
 }
   onCategoryChange(value: string): void {
     const [selectedCategoryId, selectedCategoryName] = value.split(',').map(v => v.trim());
@@ -60,9 +71,11 @@ handleSelectedSubValueChange(value: string): void {
     } else {
       this.subCategoriesSubject.next([]);
     }
+    this.saveToLocalStorage();
 }
 onSubCategoryChange(selectedSubCategoryId: number | undefined): void {
   this.subCategoryValue = selectedSubCategoryId;
+  this.saveToLocalStorage();
 }
 
 createQuiz( value: string | null ,subcategoriesValue: number|undefined,difficulty: string): void {
@@ -70,5 +83,6 @@ createQuiz( value: string | null ,subcategoriesValue: number|undefined,difficult
   const catId = Number(selectedCategoryId) || subcategoriesValue || 0;
 
   this.questions$ = this.quizService.createQuiz(catId.toString(), difficulty as Difficulty);
+  this.saveToLocalStorage();
 }
 }
