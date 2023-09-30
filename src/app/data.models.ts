@@ -1,3 +1,8 @@
+export interface DropdownItem {
+  name: string;
+  id?: number | string;
+}
+
 export interface Category {
   id?: number;
   name: string;

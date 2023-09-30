@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Category } from 'src/app/data.models';
+import { Category, DropdownItem } from 'src/app/data.models';
 
 @Component({
   selector: 'app-auto-filter-dropdown',
   templateUrl: './auto-filter-dropdown.component.html',
   styleUrls: ['./auto-filter-dropdown.component.css']
 })
-export class AutoFilterDropdownComponent implements OnInit {
+export class AutoFilterDropdownComponent<T extends DropdownItem> implements OnInit {
 
   // @Input() itemList: string[] = [
   //   "USA",
@@ -18,13 +18,12 @@ export class AutoFilterDropdownComponent implements OnInit {
   //   "Australia"
   // ]; // Can be countries or any other category
   selectedValue: string | null = null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @Input() itemList = [] as any[];
+  @Input() itemList: T[] = [];
   @Output() itemSelected: EventEmitter<Category> = new EventEmitter();
   @Output() valueChange = new EventEmitter<string>();
 
   searchText = '';
-  filteredItems: Category[] = [];
+  filteredItems: T[] = [];
   isHovering = false;
 
   ngOnInit(): void {
@@ -40,7 +39,7 @@ export class AutoFilterDropdownComponent implements OnInit {
     const re = new RegExp(this.searchText, 'gi');
     return text.replace(re, (match) => `<b>${match}</b>`);
   }
-  selectCategory(category: Category): void {
+  selectCategory(category: T): void {
     this.searchText = category.name;
     this.selectedValue = category.id?.toString() + ',' + category.name;
     this.valueChange.emit(this.selectedValue);
