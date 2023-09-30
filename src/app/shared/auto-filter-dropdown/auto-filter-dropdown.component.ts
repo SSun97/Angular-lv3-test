@@ -7,13 +7,15 @@ import { DropdownItem } from 'src/app/data.models';
   styleUrls: ['./auto-filter-dropdown.component.css']
 })
 export class AutoFilterDropdownComponent<T extends DropdownItem> implements OnInit {
-  selectedValue: string | null = null;
+  
   @Input() itemList: T[] = [];
   @Output() itemSelected: EventEmitter<T> = new EventEmitter();
   @Output() valueChange = new EventEmitter<string>();
 
-  searchText = '';
+  
   filteredItems: T[] = [];
+  selectedValue: string | null = null;
+  searchText = '';
   isHovering = false;
 
   ngOnInit(): void {
