@@ -18,7 +18,8 @@ export class AutoFilterDropdownComponent implements OnInit {
   //   "Australia"
   // ]; // Can be countries or any other category
   selectedValue: string | null = null;
-  @Input() itemList: Category[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @Input() itemList = [] as any[];
   @Output() itemSelected: EventEmitter<Category> = new EventEmitter();
   @Output() valueChange = new EventEmitter<string>();
 
