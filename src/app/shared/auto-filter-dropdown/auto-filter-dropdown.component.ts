@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Category, DropdownItem } from 'src/app/data.models';
+import { DropdownItem } from 'src/app/data.models';
 
 @Component({
   selector: 'app-auto-filter-dropdown',
@@ -7,19 +7,9 @@ import { Category, DropdownItem } from 'src/app/data.models';
   styleUrls: ['./auto-filter-dropdown.component.css']
 })
 export class AutoFilterDropdownComponent<T extends DropdownItem> implements OnInit {
-
-  // @Input() itemList: string[] = [
-  //   "USA",
-  //   "UK",
-  //   "Canada",
-  //   "India",
-  //   "France",
-  //   "Germany",
-  //   "Australia"
-  // ]; // Can be countries or any other category
   selectedValue: string | null = null;
   @Input() itemList: T[] = [];
-  @Output() itemSelected: EventEmitter<Category> = new EventEmitter();
+  @Output() itemSelected: EventEmitter<T> = new EventEmitter();
   @Output() valueChange = new EventEmitter<string>();
 
   searchText = '';
